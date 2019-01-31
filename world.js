@@ -1,5 +1,7 @@
 //only change this part!
 var path = "";
+var version = "1.13"
+//version: "1.12", "1.13" oder "1.14"
 var scale = 10;
 //Scale = 10: 10752x5376 pixel
 //Scale = 20: 20504x10752 pixel
@@ -191,41 +193,51 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(0, 0, 0).toLevel(48) // deep_ocean_floor
 	.go();
 
-//only for 1.13 Maps
-wp.applyHeightMap(oceanBiomeMap) 
-	.toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.fromColour(0, 150, 150).toLevel(46) //Cold Ocean - ocean 009696
-	.fromColour(0, 150, 200).toLevel(0) //Ocean - ocean 0096C8
-	.fromColour(100, 255, 100).toLevel(45) //Lukewarm Ocean - ocean 64FF64
-	.fromColour(255, 0, 100).toLevel(44) //Warm Ocean - ocean FF0064
-	.go();
-
-wp.applyHeightMap(oceanBiomeMap) 
-	.toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.withFilter(deepOceanFilter)
-	.fromColour(0, 150, 150).toLevel(49) // deep_cold_ocean
-	.go();
-
-wp.applyHeightMap(oceanBiomeMap) 
-	.toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.withFilter(deepOceanFilter)
-	.fromColour(100, 255, 100).toLevel(48) // deep_lukewarn_ocean on lukewarm_ocean
-	.go();
+//1.13 Ocean Biomes
+if (version === "1.13" || version === "1.14") {
+	wp.applyHeightMap(oceanBiomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.fromColour(0, 150, 150).toLevel(46) //Cold Ocean - ocean 009696
+		.fromColour(0, 150, 200).toLevel(0) //Ocean - ocean 0096C8
+		.fromColour(100, 255, 100).toLevel(45) //Lukewarm Ocean - ocean 64FF64
+		.fromColour(255, 0, 100).toLevel(44) //Warm Ocean - ocean FF0064
+		.go();
 
 	wp.applyHeightMap(oceanBiomeMap) 
-	.toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.withFilter(deepOceanFilter)
-	.fromColour(255, 0, 100).toLevel(48) // deep_lukewarm_ocean on warm_ocean
-	.go();
-//end of 1.13
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.withFilter(deepOceanFilter)
+		.fromColour(0, 150, 150).toLevel(49) // deep_cold_ocean
+		.go();
+
+	wp.applyHeightMap(oceanBiomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.withFilter(deepOceanFilter)
+		.fromColour(100, 255, 100).toLevel(48) // deep_lukewarn_ocean on lukewarm_ocean
+		.go();
+
+	wp.applyHeightMap(oceanBiomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.withFilter(deepOceanFilter)
+		.fromColour(255, 0, 100).toLevel(48) // deep_lukewarm_ocean on warm_ocean
+		.go();
+}
+
+if (version === "1.14") {
+	wp.applyHeightMap(biomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.fromColour(0, 120, 255).toLevel(189) //Am - bamboo_jungle 0000FF 
+		.go();
+}
 
 //replace river terrain on "river mask" with filter
 wp.applyHeightMap(riverMask)
