@@ -1,11 +1,14 @@
 # MinecraftEarthMap
 WorldPainter Script and Heightmaps for generating an earth map for Minecraft
 
+Just run the script "world.js" from "tools" -> "Run Script..." in WorldPainter.
+Be sure to place all images, layers and terrain in the right folders.
+But first change the "path" variable to match your folder with the script / files.
+
 ## Manuell operations after running the script
 
-- change sand to red_sand on australia
-- change sand to patagonien on south america
-- change sand to red sand on north america
+- change desert, desert_lakes, desert_hills to red_sand on australia
+- change desert_lakes to red sand on north america
 
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
