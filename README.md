@@ -4,9 +4,7 @@ WorldPainter Script and Heightmaps for generating an earth map for Minecraft
 ## Manuell operations after running the script
 
 - change sand to red_sand on australia
-
 - change sand to patagonien on south america
-
 - change sand to red sand on north america
 
 ## Sources
