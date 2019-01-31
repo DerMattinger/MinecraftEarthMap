@@ -1,101 +1,79 @@
-//Borders: Skizze nachzeichnen 50, 50; Tontrennung
-//Cities: Manuelle Anpassung Mitte: 0,6; Tontrennung
-//Ice: Manuelle Anpassung Mitte: 0,6; Tontrennung
-//Water: Skizze nachzeichnen 0, 0; Manuelle Anpassung Mitte: 0,38; Tontrennung 2
-//Mask: Skizze nachzeichnen 50, 50; Manuelle Anpassung Mitte: 2; Tontrennung 2
-//Heightmap 10k: Water als Mask; Manuelle Anpassung Mitte: 61 - 1 - 48; Manuelle Anpassung Mitte: 110 - 1 - 62; Gausßscher Weichzeichner 1; zusammenführen; gimp: 16bit Gray
-//Heightmap 20k: Water als Mask; Manuelle Anpassung Mitte: 61 - 1 - 35; Manuelle Anpassung Mitte: 158 - 1 - 62; Gausßscher Weichzeichner 1; zusammenführen; gimp: 16bit Gray
-//Heightmap 40k: Water als Mask; Manuelle Anpassung Mitte: 61 - 1 - 9; Manuelle Anpassung Mitte: 254 - 1 - 62; Gausßscher Weichzeichner 1; zusammenführen; gimp: 16bit Gray
-//OceanBiomes: Oberflächenunsdchärfe 6 - 74; Tontrennung 2
+//only change this part!
+var path = "";
+var scale = 10;
+//Scale = 10: 10752x5376 pixel
+//Scale = 20: 20504x10752 pixel
 
-// variables for scaling
-var scale = 20; //blocks in thausend: e.g. 10 / 20 / 40
-var west = -537.6 * scale;
-var north = -268.8 * scale;
+//don't change anything from here!
 
-// variables from Images
-var heightMap = wp.getHeightMap().fromFile('HeightMap'+scale+'k.png').go();
-var biomeMap = wp.getHeightMap().fromFile('BiomeMap'+scale+'k.png').go();
-//var oceanBiomeMap = wp.getHeightMap().fromFile('OceanBiomeMap'+scale+'k.png').go();
-var riverMask = wp.getHeightMap().fromFile('WaterMap'+scale+'k.png').go();
-var borderMask = wp.getHeightMap().fromFile('Border'+scale+'k.png').go();
-var iceMask = wp.getHeightMap().fromFile('Ice'+scale+'k.png').go();
-var citiesMask = wp.getHeightMap().fromFile('Cities'+scale+'k.png').go();
+//shift the image, so 0,0 is in the exact middle of the map
+var westShift = -537.6 * scale;
+var northShift = -268.8 * scale;
 
-//first of all, create the map
+//import heightmap and masks from images
+var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+scale+'k.png').go();
+var biomeMap = wp.getHeightMap().fromFile(path+'images/BiomeMap'+scale+'k.png').go();
+var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+scale+'k.png').go();
+var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+scale+'k.png').go();
+var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+scale+'k.png').go();
+var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+scale+'k.png').go();
+
+//first of all, create the map using the heightmap (16bit image, so 0-65535, to avoid rounding errors)
+//important to create this before importing custom terrain
 var world = wp.createWorld()
 	.fromHeightMap(heightMap)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.fromLevels(0, 65535).toLevels(0, 255)
 	.go();
 
-// Other variables
+//import layers
 var biomesLayer = wp.getLayer().withName("Biomes").go();
-var riverLayer = wp.getLayer().fromFile('layers/Rivers.layer').go();
-var borderLayer = wp.getLayer().fromFile('layers/Borders.layer').go();
-var citiesLayer = wp.getLayer().fromFile('layers/Cities.layer').go();
-var mesaLayer = wp.getLayer().fromFile('layers/Mesa.layer').go();
+var riverLayer = wp.getLayer().fromFile(path+'layers/Rivers.layer').go();
+var borderLayer = wp.getLayer().fromFile(path+'layers/Borders.layer').go();
+var citiesLayer = wp.getLayer().fromFile(path+'layers/Cities.layer').go();
+var mesaLayer = wp.getLayer().fromFile(path+'layers/Mesa.layer').go();
 
-var beachFilter = wp.createFilter()
-	.exceptOnLayer(riverLayer)
-    .aboveLevel(62)
-    .belowLevel(255)
-    .go();
-
+//some filters for later
 var deepOceanFilter = wp.createFilter()
     .belowLevel(61-(scale*1.3)/2)
     .go();
 
 var waterFilter = wp.createFilter()
+	.aboveLevel(0)
+    .belowLevel(61)
     .onlyOnBiome(0) // ocean
     .go();
-
+	
 var riverFilter = wp.createFilter()
 	.aboveLevel(62)
+    .belowLevel(255)
     .onlyOnBiome(0) // ocean
     .go();
 
-//custom terrain
-var terrain = wp.getTerrain().fromFile('layers/Custom_Mesa.terrain').go();
+//import custom terrain
+var terrain = wp.getTerrain().fromFile('terrain/Custom_Mesa.terrain').go();
 var customMesa = wp.installCustomTerrain(terrain).toWorld(world).inSlot(1).go(); //Slot 1 = 47
-var terrain = wp.getTerrain().fromFile('layers/Deep_Ocean_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Deep_Ocean_Floor.terrain').go();
 var deepOcean_Floor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(2).go(); //Slot 2 = 48
-var terrain = wp.getTerrain().fromFile('layers/Deep_Snow.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Deep_Snow.terrain').go();
 var deepsnow = wp.installCustomTerrain(terrain).toWorld(world).inSlot(3).go(); //Slot 3 = 49
-var terrain = wp.getTerrain().fromFile('layers/Ocean_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Ocean_Floor.terrain').go();
 var oceanFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 4 = 50
-var terrain = wp.getTerrain().fromFile('layers/Patagonien.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Patagonien.terrain').go();
 var patagonien = wp.installCustomTerrain(terrain).toWorld(world).inSlot(5).go(); //Slot 5 = 51
-var terrain = wp.getTerrain().fromFile('layers/Red_Sand_Red_Sanstone_Mix.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Red_Sand_Red_Sanstone_Mix.terrain').go();
 var redSandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(6).go(); //Slot 6 = 52
-var terrain = wp.getTerrain().fromFile('layers/Sand_Sanstone_Mix.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Sand_Sanstone_Mix.terrain').go();
 var sandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(7).go(); //Slot 7 = 53
-var terrain = wp.getTerrain().fromFile('layers/Snow_Surface.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Snow_Surface.terrain').go();
 var snowSurface = wp.installCustomTerrain(terrain).toWorld(world).inSlot(8).go(); //Slot 8 = 54
-var terrain = wp.getTerrain().fromFile('layers/Taiga_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile('terrain/Taiga_Floor.terrain').go();
 var taigaFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(9).go(); //Slot 9 = 55
- //Slot 1 = 47
 
-//Functions	
-//Spawnpunkt verschieben	
-//var spawnX = 0; 
-//var spawnY = 0;
-//var spawnZ = world.getHeightAt(spawnX, spawnY).go();
-//world.setSpawnX(spawnX).go();
-//world.setSpawnY(spawnY).go();
-//world.setSpawnZ(spawnZ).go();
-
-
-wp.applyHeightMap(heightMap)
-	.toWorld(world)
-	.applyToTerrain()
-	.fromLevels(0, 61).toTerrain(5)
-	.fromLevels(62, 255).toTerrain(2)
-	.go();
-	
+//apply biomes
 wp.applyHeightMap(biomeMap) 
     .toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromColour(0, 0, 255).toLevel(149) //Af - modified_jungle 0000FF 
 	.fromColour(0, 120, 255).toLevel(21) //Am - jungle 0078FF
@@ -132,26 +110,16 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(0, 0, 0).toLevel(0) //Ocean - ocean 000000
 	.go();
 
-//only for 1.13 Maps
-//wp.applyHeightMap(oceanBiomeMap) 
-//    .toWorld(world)
-//	.shift(west, north)
-//	.applyToLayer(biomesLayer)
-//	.fromColour(0, 150, 150).toLevel(0) //Cold Ocean - ocean 000000
-//	.fromColour(0, 150, 200).toLevel(0) //Ocean - ocean 000000
-//	.fromColour(100, 255, 100).toLevel(0) //Lukewarm Ocean - ocean 64FF64
-//	.fromColour(255, 0, 100).toLevel(0) //Warm Ocean - ocean 000000
-//	.go();
-	
+//apply terrain to biomes
 wp.applyHeightMap(biomeMap) 
     .toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToTerrain()
 	.fromColour(0, 0, 255).toTerrain(1) //Af - Gras
 	.fromColour(0, 120, 255).toTerrain(1) //Am - Gras
 	.fromColour(70, 170, 250).toTerrain(1) //Aw - Gras
 	.fromColour(255, 0, 0).toTerrain(53) //BWh - Sand
-	.fromColour(255, 150, 150).toTerrain(53) //BWk - Sand
+	.fromColour(255, 150, 150).toTerrain(51) //BWk - Sand
 	.fromColour(245, 165, 0).toTerrain(1) //BSh - Gras
 	.fromColour(255, 220, 100).toTerrain(53) //BSk - Sand
 	.fromColour(255, 255, 0).toTerrain(1) //Csa - Gras
@@ -181,97 +149,116 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(255, 100, 0).toTerrain(6) // red_sand
 	.fromColour(0, 0, 0).toTerrain(50) // Sand
 	.go();
-	
+
+//apply mesa layer to one biome
 wp.applyHeightMap(biomeMap) 
     .toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(mesaLayer)
 	.fromColour(255, 100, 0).toTerrain(1)
 	.go();
 
-//Apply MyRiver Layer on River Mask
+//apply MyRiver Layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(riverLayer)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
 
-//Apply deep_ocean on ocean biome on land
-wp.applyHeightMap(biomeMap) 
+//apply ocean biome on "river mask"
+wp.applyHeightMap(riverMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
+	.applyToLayer(biomesLayer)
+	.fromLevels(1, 255).toLevel(0) //ocean
+	.go();
+
+//apply deep_ocean biome with filter
+wp.applyHeightMap(riverMask) 
+	.toWorld(world)
+	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.withFilter(deepOceanFilter)
 	.fromColour(0, 0, 0).toLevel(24) // deep_ocean
 	.go();
-	
 wp.applyHeightMap(biomeMap) 
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.withFilter(deepOceanFilter)
 	.applyToTerrain()
 	.fromColour(0, 0, 0).toLevel(48) // deep_ocean_floor
 	.go();
 
-//Apply frozen_ocean on Ice Mask
+//replace river terrain on "river mask" with filter
+wp.applyHeightMap(riverMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToTerrain()
+	.fromLevels(1,255).toLevel(50) //Ocean Floor
+	.withFilter(riverFilter)
+	.go();
+	
+//replace ocean biome with river biome with filter
+wp.applyHeightMap(riverMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(biomesLayer)
+	.fromLevels(1,255).toLevel(7) //River
+	.withFilter(riverFilter)
+	.go();
+
+//remove MyRiver layer on "river mask" with filter
+wp.applyHeightMap(riverMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(riverLayer)
+	.fromLevel(1).toLevel(0)
+	.withFilter(waterFilter)
+	.go()
+
+//apply frozen_ocean on "ice mask"
 wp.applyHeightMap(iceMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(10) // frozen_ocean
 	.go();
 
-//Apply Border Layer on Border Mask
+//apply Border layer on "border mask"
 wp.applyHeightMap(borderMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(borderLayer)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
-
-//Remove Border on RiverMask
+//remove border layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(borderLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
 
-//Apply Cities Layer on Cities Mask
+//apply Cities layer on "cities mask"
 wp.applyHeightMap(citiesMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(citiesLayer)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
-
-//Remove Cities on RiverMask
+//remove Cities layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
-	.shift(west, north)
+	.shift(westShift, northShift)
 	.applyToLayer(citiesLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
 
-//wp.applyLayer(biomesLayer)
-//	.toWorld(world)
-//	.toLevel(7) //River
-//	.withFilter(riverFilter)
-//	.go();
-
+//save the world
 wp.saveWorld(world)
-	.toFile('earth_1-'+40/scale*1000+'.world')
+	.toFile(path+'earth_1-'+40/scale*1000+'.world')
 	.go();
-	
-//global operations:
-//fill with biome: "River" at or above "62" only on "River" Layer
-//remove "River" Layer only on Ocean
-
-//manuell operations
-//change sand to red_sand on australia
-//change sand to patagonien on south america
-//change sand to red sand on north america
