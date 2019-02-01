@@ -53,23 +53,23 @@ var riverFilter = wp.createFilter()
     .go();
 
 //import custom terrain
-var terrain = wp.getTerrain().fromFile('terrain/Custom_Mesa.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Custom_Mesa.terrain').go();
 var customMesa = wp.installCustomTerrain(terrain).toWorld(world).inSlot(1).go(); //Slot 1 = 47
-var terrain = wp.getTerrain().fromFile('terrain/Deep_Ocean_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Deep_Ocean_Floor.terrain').go();
 var deepOcean_Floor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(2).go(); //Slot 2 = 48
-var terrain = wp.getTerrain().fromFile('terrain/Deep_Snow.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Deep_Snow.terrain').go();
 var deepsnow = wp.installCustomTerrain(terrain).toWorld(world).inSlot(3).go(); //Slot 3 = 49
-var terrain = wp.getTerrain().fromFile('terrain/Ocean_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Ocean_Floor.terrain').go();
 var oceanFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 4 = 50
-var terrain = wp.getTerrain().fromFile('terrain/Patagonien.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Patagonien.terrain').go();
 var patagonien = wp.installCustomTerrain(terrain).toWorld(world).inSlot(5).go(); //Slot 5 = 51
-var terrain = wp.getTerrain().fromFile('terrain/Red_Sand_Red_Sanstone_Mix.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Red_Sand_Red_Sanstone_Mix.terrain').go();
 var redSandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(6).go(); //Slot 6 = 52
-var terrain = wp.getTerrain().fromFile('terrain/Sand_Sanstone_Mix.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Sanstone_Mix.terrain').go();
 var sandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(7).go(); //Slot 7 = 53
-var terrain = wp.getTerrain().fromFile('terrain/Snow_Surface.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Snow_Surface.terrain').go();
 var snowSurface = wp.installCustomTerrain(terrain).toWorld(world).inSlot(8).go(); //Slot 8 = 54
-var terrain = wp.getTerrain().fromFile('terrain/Taiga_Floor.terrain').go();
+var terrain = wp.getTerrain().fromFile(path+'terrain/Taiga_Floor.terrain').go();
 var taigaFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(9).go(); //Slot 9 = 55
 
 //apply biomes
@@ -178,7 +178,7 @@ wp.applyHeightMap(riverMask)
 	.go();
 
 //apply deep_ocean biome with filter
-wp.applyHeightMap(riverMask) 
+wp.applyHeightMap(biomeMap) 
 	.toWorld(world)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
@@ -203,6 +203,14 @@ if (version === "1.13" || version === "1.14") {
 		.fromColour(0, 150, 200).toLevel(0) //Ocean - ocean 0096C8
 		.fromColour(100, 255, 100).toLevel(45) //Lukewarm Ocean - ocean 64FF64
 		.fromColour(255, 0, 100).toLevel(44) //Warm Ocean - ocean FF0064
+		.go();
+
+	wp.applyHeightMap(oceanBiomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.withFilter(deepOceanFilter)
+		.fromColour(0, 150, 200).toLevel(24) // deep_ocean
 		.go();
 
 	wp.applyHeightMap(oceanBiomeMap) 
