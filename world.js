@@ -1,60 +1,66 @@
 //only change this part!
-var path = "";
+var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
+
 var version = "1.13"
-//version: "1.12", "1.13" oder "1.14"
+//version: "1.12", "1.13" or "1.14"
+
 var scale = 10;
-//Scale = 10: 10752x5376 pixel
-//Scale = 20: 20504x10752 pixel
+//Scales:
+//"3.8095238" = Scale 1:10000 - uses 4096x5376 pixel images
+//"10" = Scale 1:4000 - uses 10752x5376 pixel images
+//"20" = Scale 1:2000 - uses 20504x10752 pixel images
+//"40" = scale 1:1000 - uses 43008x20504 pixel images
 
 //don't change anything from here!
 
 //shift the image, so 0,0 is in the exact middle of the map
-var westShift = -537.6 * scale;
-var northShift = -268.8 * scale;
+var westShift = -Math.round(537.6 * scale);
+var northShift = -Math.round(268.8 * scale);
 
 //import heightmap and masks from images
-var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+scale+'k.png').go();
-var biomeMap = wp.getHeightMap().fromFile(path+'images/BiomeMap'+scale+'k.png').go();
-var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+scale+'k.png').go();
-var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+scale+'k.png').go();
-var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+scale+'k.png').go();
-var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+scale+'k.png').go();
+var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+Math.round(scale)+'k.png').go();
+var biomeMap = wp.getHeightMap().fromFile(path+'images/BiomeMap'+Math.round(scale)+'k.png').go();
+var oceanBiomeMap = wp.getHeightMap().fromFile(path+'images/OceanBiomeMap'+Math.round(scale)+'k.png').go();
+var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+Math.round(scale)+'k.png').go();
+var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+Math.round(scale)+'k.png').go();
+var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+Math.round(scale)+'k.png').go();
+var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scale)+'k.png').go();
 
-//first of all, create the map using the heightmap (16bit image, so 0-65535, to avoid rounding errors)
-//important to create this before importing custom terrain
+//first of all, create the map using the heightmap (I prefer a 16bit grayscale image, so 0-65535 color steps, to avoid rounding errors)
+//it's important to create this before importing custom terrain
 var world = wp.createWorld()
-	.fromHeightMap(heightMap)
-	.shift(westShift, northShift)
-	.fromLevels(0, 65535).toLevels(0, 255)
-	.go();
+    .fromHeightMap(heightMap)
+    .shift(westShift, northShift)
+    .fromLevels(0, 65535).toLevels(0, 255)
+    .go();
 
-//import layers
+//now import the layers
 var biomesLayer = wp.getLayer().withName("Biomes").go();
 var riverLayer = wp.getLayer().fromFile(path+'layers/Rivers.layer').go();
 var borderLayer = wp.getLayer().fromFile(path+'layers/Borders.layer').go();
 var citiesLayer = wp.getLayer().fromFile(path+'layers/Cities.layer').go();
 var mesaLayer = wp.getLayer().fromFile(path+'layers/Mesa.layer').go();
 
-//some filters for later
+//create some filters for later use
 var deepOceanFilter = wp.createFilter()
-    .belowLevel(61-(scale*1.3)/2)
+    .belowLevel(Math.round(61-(10*1.3)/2))
     .go();
 
 var waterFilter = wp.createFilter()
-	.aboveLevel(0)
+    .aboveLevel(0)
     .belowLevel(61)
     .onlyOnBiome(0) // ocean
     .go();
 	
 var riverFilter = wp.createFilter()
-	.aboveLevel(62)
+    .aboveLevel(62)
     .belowLevel(255)
     .onlyOnBiome(0) // ocean
     .go();
 
 //import custom terrain
 var terrain = wp.getTerrain().fromFile(path+'terrain/Custom_Mesa.terrain').go();
-var customMesa = wp.installCustomTerrain(terrain).toWorld(world).inSlot(1).go(); //Slot 1 = 47
+var customMesa = wp.installCustomTerrain(terrain).toWorld(world).inSlot(1).go(); //Slot 1 = 47 see Documentation
 var terrain = wp.getTerrain().fromFile(path+'terrain/Deep_Ocean_Floor.terrain').go();
 var deepOcean_Floor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(2).go(); //Slot 2 = 48
 var terrain = wp.getTerrain().fromFile(path+'terrain/Deep_Snow.terrain').go();
@@ -71,6 +77,8 @@ var terrain = wp.getTerrain().fromFile(path+'terrain/Snow_Surface.terrain').go()
 var snowSurface = wp.installCustomTerrain(terrain).toWorld(world).inSlot(8).go(); //Slot 8 = 54
 var terrain = wp.getTerrain().fromFile(path+'terrain/Taiga_Floor.terrain').go();
 var taigaFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(9).go(); //Slot 9 = 55
+var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Gras_Mix.terrain').go();
+var sandGrasMix = wp.installCustomTerrain(terrain).toWorld(world).inSlot(10).go(); //Slot 10 = 56
 
 //apply biomes
 wp.applyHeightMap(biomeMap) 
@@ -123,7 +131,7 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(255, 0, 0).toTerrain(53) //BWh - Sand
 	.fromColour(255, 150, 150).toTerrain(51) //BWk - Sand
 	.fromColour(245, 165, 0).toTerrain(1) //BSh - Gras
-	.fromColour(255, 220, 100).toTerrain(53) //BSk - Sand
+	.fromColour(255, 220, 100).toTerrain(56) //BSk - Sand
 	.fromColour(255, 255, 0).toTerrain(1) //Csa - Gras
 	.fromColour(200, 200, 0).toTerrain(1) //Csb - Gras
 	.fromColour(150, 255, 150).toTerrain(1) //Cwa - Gras
@@ -204,7 +212,7 @@ if (version === "1.13" || version === "1.14") {
 		.fromColour(100, 255, 100).toLevel(45) //Lukewarm Ocean - ocean 64FF64
 		.fromColour(255, 0, 100).toLevel(44) //Warm Ocean - ocean FF0064
 		.go();
-
+			
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
 		.shift(westShift, northShift)
@@ -265,7 +273,7 @@ wp.applyHeightMap(riverMask)
 	.withFilter(riverFilter)
 	.go();
 
-//remove MyRiver layer on "river mask" with filter
+//remove MyRiver layer on "river mask" with ocean filter
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -280,6 +288,15 @@ wp.applyHeightMap(iceMask)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(10) // frozen_ocean
+	.go();
+	
+//apply deep_frozen_ocean on "ice mask"
+wp.applyHeightMap(iceMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(biomesLayer)
+	.fromLevels(1, 255).toLevel(50) // deep_frozen_ocean
+	.withFilter(deepOceanFilter)
 	.go();
 
 //apply Border layer on "border mask"
@@ -314,7 +331,7 @@ wp.applyHeightMap(riverMask)
 	.fromLevel(1).toLevel(0)
 	.go()
 
-//save the world
+//last but not least, save the world
 wp.saveWorld(world)
-	.toFile(path+'earth_1-'+40/scale*1000+'.world')
+	.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'.world')
 	.go();
