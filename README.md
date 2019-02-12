@@ -7,7 +7,8 @@ But first change the "path" variable to match your folder with the script / file
 
 ## Manuell operations after running the script
 
-- change terrain of desert, desert_lakes, desert_hills to red_sand on australia
+- change terrain of desert, desert_lakes, desert_hills to red_sand on Australia
+- Remove the Border and Cities Layers (if you want)
 
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
