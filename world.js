@@ -67,7 +67,8 @@ var terrain = wp.getTerrain().fromFile(path+'terrain/Deep_Snow.terrain').go();
 var deepsnow = wp.installCustomTerrain(terrain).toWorld(world).inSlot(3).go(); //Slot 3 = 49
 var terrain = wp.getTerrain().fromFile(path+'terrain/Ocean_Floor.terrain').go();
 var oceanFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 4 = 50
-//Slot 3 = 51 - unused terrain
+var terrain = wp.getTerrain().fromFile(path+'terrain/stone_sand_gravel_grass_block.terrain').go();
+var stoneSandGravelGrass_block = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 5 = 51
 var terrain = wp.getTerrain().fromFile(path+'terrain/Red_Sand_Red_Sanstone_Mix.terrain').go();
 var redSandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(6).go(); //Slot 6 = 52
 var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Sanstone_Mix.terrain').go();
