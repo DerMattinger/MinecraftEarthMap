@@ -5,11 +5,6 @@ Just run the script "world.js" from "tools" -> "Run Script..." in WorldPainter.
 Be sure to place all images, layers and terrain in the right folders.
 But first change the "path" variable to match your folder with the script / files.
 
-## Manuell operations after running the script
-
-- change terrain of desert, desert_lakes, desert_hills to red_sand on Australia
-- Remove the Border and Cities Layers (if you want)
-
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
 Bathymetry: https://visibleearth.nasa.gov/view.php?id=73963
