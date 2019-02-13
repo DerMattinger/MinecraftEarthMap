@@ -118,6 +118,10 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(220, 220, 220).toLevel(26) // - snowy_beach DCDCDC
 	.fromColour(255, 100, 0).toLevel(37) // - badlands FF6400
 	.fromColour(0, 0, 0).toLevel(0) //Ocean - ocean 000000
+	//Australia
+	.fromColour(255, 20, 0).toLevel(2) //BWh - desert FF0000
+	.fromColour(255, 170, 150).toLevel(17) //BWk - desert_hills FF9696
+	.fromColour(255, 255, 100).toLevel(130) //BSk - desert_lakes FFDC64
 	.go();
 
 //apply terrain to biomes
@@ -158,6 +162,10 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(220, 220, 220).toTerrain(40) // deep_snow
 	.fromColour(255, 100, 0).toTerrain(6) // red_sand
 	.fromColour(0, 0, 0).toTerrain(50) // Sand
+	//Australia
+	.fromColour(255, 20, 0).toLevel(52) //BWh - custom_red_sand
+	.fromColour(255, 170, 150).toLevel(52) //BWk - custom_red_sand
+	.fromColour(255, 255, 100).toLevel(52) //BSk - custom_red_sand
 	.go();
 
 //apply mesa layer to one biome
