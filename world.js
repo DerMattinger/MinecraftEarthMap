@@ -289,15 +289,17 @@ wp.applyHeightMap(iceMask)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(10) // frozen_ocean
 	.go();
-	
-//apply deep_frozen_ocean on "ice mask"
-wp.applyHeightMap(iceMask)
-	.toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.fromLevels(1, 255).toLevel(50) // deep_frozen_ocean
-	.withFilter(deepOceanFilter)
-	.go();
+
+if (version === "1.13" || version === "1.14") {
+	//apply deep_frozen_ocean on "ice mask"
+	wp.applyHeightMap(iceMask)
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(biomesLayer)
+		.fromLevels(1, 255).toLevel(50) // deep_frozen_ocean
+		.withFilter(deepOceanFilter)
+		.go();
+}
 
 //apply Border layer on "border mask"
 wp.applyHeightMap(borderMask)
