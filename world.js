@@ -34,6 +34,12 @@ var world = wp.createWorld()
     .fromLevels(0, 65535).toLevels(0, 255)
     .go();
 
+//calculate the spawnpoint
+var spawnX = Math.round(110.5 * scale);
+var spawnY = -Math.round(11.4 * scale);
+//set spawnpoint
+world.setSpawnPoint(new java.awt.Point(spawnX, spawnY));
+
 //now import the layers
 var biomesLayer = wp.getLayer().withName("Biomes").go();
 var riverLayer = wp.getLayer().fromFile(path+'layers/Rivers.layer').go();
