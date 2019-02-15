@@ -108,7 +108,7 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(50, 200, 0).toLevel(3) //Cfc - mountains 32C800
 	.fromColour(255, 0, 255).toLevel(36) //Dsa - savanna_plateau FF00FF
 	.fromColour(200, 0, 200).toLevel(38) //Dsb - wooded_badlands_plateau C800C8
-	.fromColour(150, 50, 150).toLevel(33) //Dsc - giant_tree_taiga_hills 963296
+	.fromColour(150, 50, 150).toLevel(30) //Dsc - snowy_taiga 963296
 	.fromColour(150, 100, 150).toLevel(161) //Dsd - giant_spruce_taiga_hills 966496
 	.fromColour(170, 175, 255).toLevel(6) //Dwa - swamp AAAFFF
 	.fromColour(90, 120, 220).toLevel(134) //Dwb - swampland_hills 5A78DC
@@ -116,10 +116,10 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(50, 0, 135).toLevel(160) //Dwd - giant_spruce_taiga 320087
 	.fromColour(0, 255, 255).toLevel(29) //Dfa - dark_forest 00FFFF
 	.fromColour(55, 200, 255).toLevel(5) //Dfb - taiga 37C8FF
-	.fromColour(0, 125, 125).toLevel(30) //Dfc - snowy_taiga 007D7D
+	.fromColour(0, 125, 125).toLevel(33) //Dfc - giant_tree_taiga_hills 007D7D
 	.fromColour(0, 70, 95).toLevel(13) //Dfd - snowy_mountains 00465F
 	.fromColour(178, 178, 178).toLevel(12) //ET - snowy_tundra B2B2B2
-	.fromColour(102, 102, 102).toLevel(127) //EF - the_void 666666
+	.fromColour(102, 102, 102).toLevel(140) //EF - ice_spikes 666666
 	.fromColour(200, 200, 200).toLevel(16) // - beach B2B2B2
 	.fromColour(220, 220, 220).toLevel(26) // - snowy_beach DCDCDC
 	.fromColour(255, 100, 0).toLevel(37) // - badlands FF6400
@@ -153,14 +153,14 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(255, 0, 255).toTerrain(1) //Dsa - Gras
 	.fromColour(200, 0, 200).toTerrain(1) //Dsb - Gras
 	.fromColour(150, 50, 150).toTerrain(55) //Dsc - Podzol
-	.fromColour(150, 100, 150).toTerrain(55) //Dsd - Podzol
+	.fromColour(150, 100, 150).toTerrain(1) //Dsd - Gras
 	.fromColour(170, 175, 255).toTerrain(1) //Dwa - Gras
 	.fromColour(90, 120, 220).toTerrain(1) //Dwb - Gras
 	.fromColour(75, 80, 180).toTerrain(55) //Dwc - Podzol
 	.fromColour(50, 0, 135).toTerrain(55) //Dwd - Podzol
 	.fromColour(0, 255, 255).toTerrain(1) //Dfa - Gras
 	.fromColour(55, 200, 255).toTerrain(1) //Dfb - Gras
-	.fromColour(0, 125, 125).toTerrain(1) //Dfc - Gras
+	.fromColour(0, 125, 125).toTerrain(55) //Dfc - Podzol
 	.fromColour(0, 70, 95).toTerrain(1) //Dfd - Gras
 	.fromColour(178, 178, 178).toTerrain(40) //ET - deep_snow
 	.fromColour(102, 102, 102).toTerrain(49) //EF - Custom Deep Snow
