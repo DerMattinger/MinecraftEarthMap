@@ -6,10 +6,9 @@ var version = "1.13"
 
 var scale = 10;
 //Scales:
-//"3.8095238" = Scale 1:10000 - uses 4096x5376 pixel images
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
 //"20" = Scale 1:2000 - uses 20504x10752 pixel images
-//"40" = scale 1:1000 - uses 43008x20504 pixel images - these Images not includes (they are to big for GitHub)
+//"40" = scale 1:1000 - uses 43008x20504 pixel images - these Images are not includes (they are to big for GitHub)
 
 //don't change anything from here!
 
