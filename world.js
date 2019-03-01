@@ -25,6 +25,10 @@ var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+Math.round(sca
 var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+Math.round(scale)+'k.png').go();
 var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+Math.round(scale)+'k.png').go();
 var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scale)+'k.png').go();
+var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'k.png').go();
+var IronMask = wp.getHeightMap().fromFile(path+'images/Iron'+Math.round(scale)+'k.png').go();
+var DiamondMask = wp.getHeightMap().fromFile(path+'images/Diamond'+Math.round(scale)+'k.png').go();
+var CoalMask = wp.getHeightMap().fromFile(path+'images/Coal'+Math.round(scale)+'k.png').go();
 
 //first of all, create the map using the heightmap (I prefer a 16bit grayscale image, so 0-65535 color steps, to avoid rounding errors)
 //it's important to create this before importing custom terrain
@@ -46,6 +50,10 @@ var riverLayer = wp.getLayer().fromFile(path+'layers/Rivers.layer').go();
 var borderLayer = wp.getLayer().fromFile(path+'layers/Borders.layer').go();
 var citiesLayer = wp.getLayer().fromFile(path+'layers/Cities.layer').go();
 var mesaLayer = wp.getLayer().fromFile(path+'layers/Mesa.layer').go();
+var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
+var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
+var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
+var coalDeposit = wp.getLayer().fromFile(path+'ore/coal_deposit.layer').go();
 
 //create some filters for later use
 var deepOceanFilter = wp.createFilter()
@@ -346,6 +354,42 @@ wp.applyHeightMap(riverMask)
 	.applyToLayer(citiesLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
+
+//apply Gold layer on "gold mask"
+wp.applyHeightMap(GoldMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(goldDeposit)
+	.fromLevel(0).toLevel(0)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
+	
+//apply Iron layer on "iron mask"
+wp.applyHeightMap(IronMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(ironDeposit)
+	.fromLevel(0).toLevel(0)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
+	
+//apply Diamond layer on "diamond mask"
+wp.applyHeightMap(DiamondMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(diamondDeposit)
+	.fromLevel(0).toLevel(0)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
+	
+//apply Coal layer on "coal mask"
+wp.applyHeightMap(CoalMask)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(coalDeposit)
+	.fromLevel(0).toLevel(0)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
 
 //last but not least, save the world
 wp.saveWorld(world)
