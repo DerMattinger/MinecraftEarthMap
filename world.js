@@ -45,10 +45,10 @@ world.setSpawnPoint(new java.awt.Point(spawnX, spawnY));
 
 //now import the layers
 var biomesLayer = wp.getLayer().withName("Biomes").go();
-var riverLayer = wp.getLayer().fromFile(path+'layers/Rivers.layer').go();
-var borderLayer = wp.getLayer().fromFile(path+'layers/Borders.layer').go();
-var citiesLayer = wp.getLayer().fromFile(path+'layers/Cities.layer').go();
-var mesaLayer = wp.getLayer().fromFile(path+'layers/Mesa.layer').go();
+var riverLayer = wp.getLayer().fromFile(path+'layer/Rivers.layer').go();
+var borderLayer = wp.getLayer().fromFile(path+'layer/Borders.layer').go();
+var citiesLayer = wp.getLayer().fromFile(path+'layer/Cities.layer').go();
+var mesaLayer = wp.getLayer().fromFile(path+'layer/Mesa.layer').go();
 var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
 var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
 var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
@@ -81,7 +81,7 @@ var deepsnow = wp.installCustomTerrain(terrain).toWorld(world).inSlot(3).go(); /
 var terrain = wp.getTerrain().fromFile(path+'terrain/Ocean_Floor.terrain').go();
 var oceanFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 4 = 50
 var terrain = wp.getTerrain().fromFile(path+'terrain/stone_sand_gravel_grass_block.terrain').go();
-var stoneSandGravelGrass_block = wp.installCustomTerrain(terrain).toWorld(world).inSlot(4).go(); //Slot 5 = 51
+var stoneSandGravelGrass_block = wp.installCustomTerrain(terrain).toWorld(world).inSlot(5).go(); //Slot 5 = 51
 var terrain = wp.getTerrain().fromFile(path+'terrain/Red_Sand_Red_Sanstone_Mix.terrain').go();
 var redSandSanstone = wp.installCustomTerrain(terrain).toWorld(world).inSlot(6).go(); //Slot 6 = 52
 var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Sanstone_Mix.terrain').go();
