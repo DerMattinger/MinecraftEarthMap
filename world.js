@@ -1,18 +1,21 @@
-//only change this part!
+//path to your world.js script file
 var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
 
-var version = "1.13"
 //version: "1.12", "1.13" or "1.14"
+var version = "1.13"
 
-var scale = 10;
 //Scales:
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
 //"20" = Scale 1:2000 - uses 20504x10752 pixel images
-//"40" = scale 1:1000 - uses 43008x20504 pixel images - these Images are not includes (they are to big for GitHub)
+//"40" = scale 1:1000 - uses 43008x20504 pixel images
+var scale = 10;
+
+//groundmaterial: "globecover", or "biomes"
+var groundmaterial = "globecover"
 
 //don't change anything from here!
 
-//shift the image, so 0,0 is in the exact middle of the map
+//shift the image, so 0,0 is in the exact middle of the map (latitude and longitude 0,0)
 var westShift = -Math.round(537.6 * scale);
 var northShift = -Math.round(268.8 * scale);
 
@@ -92,6 +95,8 @@ var terrain = wp.getTerrain().fromFile(path+'terrain/Taiga_Floor.terrain').go();
 var taigaFloor = wp.installCustomTerrain(terrain).toWorld(world).inSlot(9).go(); //Slot 9 = 55
 var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Gras_Mix.terrain').go();
 var sandGrasMix = wp.installCustomTerrain(terrain).toWorld(world).inSlot(10).go(); //Slot 10 = 56
+var terrain = wp.getTerrain().fromFile(path+'terrain/Swamp.terrain').go();
+var swamp = wp.installCustomTerrain(terrain).toWorld(world).inSlot(11).go(); //Slot 11 = 57
 
 //apply biomes
 wp.applyHeightMap(biomeMap) 
@@ -138,48 +143,65 @@ wp.applyHeightMap(biomeMap)
 	.go();
 
 //apply terrain to biomes
-wp.applyHeightMap(biomeMap) 
-    .toWorld(world)
-	.shift(westShift, northShift)
-	.applyToTerrain()
-	.fromColour(0, 0, 255).toTerrain(1) //Af - Gras
-	.fromColour(0, 120, 255).toTerrain(1) //Am - Gras
-	.fromColour(70, 170, 250).toTerrain(1) //Aw - Gras
-	.fromColour(255, 0, 0).toTerrain(53) //BWh - Sand
-	.fromColour(255, 150, 150).toTerrain(51) //BWk - Sand
-	.fromColour(245, 165, 0).toTerrain(1) //BSh - Gras
-	.fromColour(255, 220, 100).toTerrain(56) //BSk - Sand
-	.fromColour(255, 255, 0).toTerrain(1) //Csa - Gras
-	.fromColour(200, 200, 0).toTerrain(1) //Csb - Gras
-	.fromColour(150, 255, 150).toTerrain(1) //Cwa - Gras
-	.fromColour(100, 200, 100).toTerrain(1) //Cwb - Gras
-	.fromColour(50, 150, 50).toTerrain(1) //Cwc - Gras
-	.fromColour(200, 255, 80).toTerrain(1) //Cfa - Gras
-	.fromColour(100, 255, 80).toTerrain(1) //Cfb - Gras
-	.fromColour(50, 200, 0).toTerrain(1) //Cfc - Gras
-	.fromColour(255, 0, 255).toTerrain(1) //Dsa - Gras
-	.fromColour(200, 0, 200).toTerrain(1) //Dsb - Gras
-	.fromColour(150, 50, 150).toTerrain(55) //Dsc - Podzol
-	.fromColour(150, 100, 150).toTerrain(1) //Dsd - Gras
-	.fromColour(170, 175, 255).toTerrain(1) //Dwa - Gras
-	.fromColour(90, 120, 220).toTerrain(1) //Dwb - Gras
-	.fromColour(75, 80, 180).toTerrain(55) //Dwc - Podzol
-	.fromColour(50, 0, 135).toTerrain(55) //Dwd - Podzol
-	.fromColour(0, 255, 255).toTerrain(1) //Dfa - Gras
-	.fromColour(55, 200, 255).toTerrain(1) //Dfb - Gras
-	.fromColour(0, 125, 125).toTerrain(55) //Dfc - Podzol
-	.fromColour(0, 70, 95).toTerrain(1) //Dfd - Gras
-	.fromColour(178, 178, 178).toTerrain(40) //ET - deep_snow
-	.fromColour(102, 102, 102).toTerrain(49) //EF - Custom Deep Snow
-	.fromColour(200, 200, 200).toTerrain(5) // sand
-	.fromColour(220, 220, 220).toTerrain(40) // deep_snow
-	.fromColour(255, 100, 0).toTerrain(6) // red_sand
-	.fromColour(0, 0, 0).toTerrain(50) // Sand
-	//Australia
-	.fromColour(255, 20, 0).toLevel(52) //BWh - custom_red_sand
-	.fromColour(255, 170, 150).toLevel(52) //BWk - custom_red_sand
-	.fromColour(255, 255, 100).toLevel(52) //BSk - custom_red_sand
-	.go();
+if (groundmaterial === "biomes") {
+	wp.applyHeightMap(biomeMap) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToTerrain()
+		.fromColour(0, 0, 255).toTerrain(1) //Af - Gras
+		.fromColour(0, 120, 255).toTerrain(1) //Am - Gras
+		.fromColour(70, 170, 250).toTerrain(1) //Aw - Gras
+		.fromColour(255, 0, 0).toTerrain(53) //BWh - Sand
+		.fromColour(255, 150, 150).toTerrain(51) //BWk - Sand
+		.fromColour(245, 165, 0).toTerrain(1) //BSh - Gras
+		.fromColour(255, 220, 100).toTerrain(56) //BSk - Sand
+		.fromColour(255, 255, 0).toTerrain(1) //Csa - Gras
+		.fromColour(200, 200, 0).toTerrain(1) //Csb - Gras
+		.fromColour(150, 255, 150).toTerrain(1) //Cwa - Gras
+		.fromColour(100, 200, 100).toTerrain(1) //Cwb - Gras
+		.fromColour(50, 150, 50).toTerrain(1) //Cwc - Gras
+		.fromColour(200, 255, 80).toTerrain(1) //Cfa - Gras
+		.fromColour(100, 255, 80).toTerrain(1) //Cfb - Gras
+		.fromColour(50, 200, 0).toTerrain(1) //Cfc - Gras
+		.fromColour(255, 0, 255).toTerrain(1) //Dsa - Gras
+		.fromColour(200, 0, 200).toTerrain(1) //Dsb - Gras
+		.fromColour(150, 50, 150).toTerrain(1) //Dsc - Gras
+		.fromColour(150, 100, 150).toTerrain(55) //Dsd - Podzol
+		.fromColour(170, 175, 255).toTerrain(1) //Dwa - Gras
+		.fromColour(90, 120, 220).toTerrain(1) //Dwb - Gras
+		.fromColour(75, 80, 180).toTerrain(55) //Dwc - Podzol
+		.fromColour(50, 0, 135).toTerrain(55) //Dwd - Podzol
+		.fromColour(0, 255, 255).toTerrain(1) //Dfa - Gras
+		.fromColour(55, 200, 255).toTerrain(1) //Dfb - Gras
+		.fromColour(0, 125, 125).toTerrain(55) //Dfc - Podzol
+		.fromColour(0, 70, 95).toTerrain(1) //Dfd - Gras
+		.fromColour(178, 178, 178).toTerrain(40) //ET - deep_snow
+		.fromColour(102, 102, 102).toTerrain(49) //EF - Custom Deep Snow
+		.fromColour(200, 200, 200).toTerrain(5) // sand
+		.fromColour(220, 220, 220).toTerrain(40) // deep_snow
+		.fromColour(255, 100, 0).toTerrain(6) // red_sand
+		.fromColour(0, 0, 0).toTerrain(50) // Sand
+		//Australia
+		.fromColour(255, 20, 0).toLevel(52) //BWh - custom_red_sand
+		.fromColour(255, 170, 150).toLevel(52) //BWk - custom_red_sand
+		.fromColour(255, 255, 100).toLevel(52) //BSk - custom_red_sand
+		.go();
+}else if (groundmaterial === "globecover") {
+	wp.applyHeightMap(globeCover) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToTerrain()
+		.fromColour(0, 255, 0).toTerrain(1) //Gras
+		.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+		.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+		.fromColour(127, 0, 0).toTerrain(55) //Podzol
+		.fromColour(255, 0, 0).toLevel(52) //custom_red_sand
+		.fromColour(150, 150, 150).toLevel(51) //stone_sand_gravel_grass
+		.fromColour(255, 127, 0).toLevel(56) //Sand_Gras_Mix
+		.fromColour(0, 127, 127).toLevel(57) //Swamp
+		.fromColour(0, 148, 255).toLevel(1) //Ocean / Rivers -> Gras, gets later overwritten
+		.go();
+}
 
 //apply mesa layer to one biome
 wp.applyHeightMap(biomeMap) 
