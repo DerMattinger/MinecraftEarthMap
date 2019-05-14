@@ -207,7 +207,7 @@ if (groundmaterial === "biomes") {
 		.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
 		.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
 		.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
-		.fromColour(0, 148, 255).toTerrain(12) //Ocean / Rivers -> Sand, gets partly overwritten
+		.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
 		.go();
 }
 
