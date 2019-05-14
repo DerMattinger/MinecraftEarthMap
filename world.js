@@ -203,11 +203,11 @@ if (groundmaterial === "biomes") {
 		.fromColour(255, 255, 0).toTerrain(53) //custom_sand
 		.fromColour(255, 255, 255).toTerrain(40) // deep_snow
 		.fromColour(127, 0, 0).toTerrain(55) //Podzol
-		.fromColour(255, 0, 0).toLevel(52) //custom_red_sand
-		.fromColour(150, 150, 150).toLevel(51) //stone_sand_gravel_grass
-		.fromColour(255, 127, 0).toLevel(56) //Sand_Gras_Mix
-		.fromColour(0, 127, 127).toLevel(1) //Swamp -> Gras, gets partly overwritten
-		.fromColour(0, 148, 255).toLevel(12) //Ocean / Rivers -> Sand, gets partly overwritten
+		.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+		.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+		.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+		.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+		.fromColour(0, 148, 255).toTerrain(12) //Ocean / Rivers -> Sand, gets partly overwritten
 		.go();
 }
 
