@@ -211,6 +211,16 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(255, 100, 0).toTerrain(1)
 	.go();
 
+//apply swamp layer to one biome
+if (groundmaterial === "globecover") {
+	wp.applyHeightMap(globeCover) 
+		.toWorld(world)
+		.shift(westShift, northShift)
+		.applyToLayer(swampLayer)
+		.fromColour(0, 127, 127).toTerrain(1)
+		.go();
+}
+
 //apply MyRiver Layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
