@@ -2,7 +2,7 @@
 var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
 
 //version: "1.12", "1.13" or "1.14"
-var version = "1.13"
+var version = "1.13";
 
 //Scales:
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
@@ -11,7 +11,7 @@ var version = "1.13"
 var scale = 10;
 
 //groundmaterial: "globecover", or "biomes"
-var groundmaterial = "globecover"
+var groundmaterial = "globecover";
 
 //don't change anything from here!
 
@@ -31,6 +31,7 @@ var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'
 var IronMask = wp.getHeightMap().fromFile(path+'images/Iron'+Math.round(scale)+'k.png').go();
 var DiamondMask = wp.getHeightMap().fromFile(path+'images/Diamond'+Math.round(scale)+'k.png').go();
 var CoalMask = wp.getHeightMap().fromFile(path+'images/Coal'+Math.round(scale)+'k.png').go();
+var globeCover = wp.getHeightMap().fromFile(path+'images/globecover'+Math.round(scale)+'k.png').go();
 
 //first of all, create the map using the heightmap (I prefer a 16bit grayscale image, so 0-65535 color steps, to avoid rounding errors)
 //it's important to create this before importing custom terrain
@@ -52,14 +53,21 @@ var riverLayer = wp.getLayer().fromFile(path+'layer/Rivers.layer').go();
 var borderLayer = wp.getLayer().fromFile(path+'layer/Borders.layer').go();
 var citiesLayer = wp.getLayer().fromFile(path+'layer/Cities.layer').go();
 var mesaLayer = wp.getLayer().fromFile(path+'layer/Mesa.layer').go();
+var swampLayer = wp.getLayer().fromFile(path+'layer/Swamp.layer').go();
 var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
 var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
 var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
 var coalDeposit = wp.getLayer().fromFile(path+'ore/coal_deposit.layer').go();
+var clayDeposit = wp.getLayer().fromFile(path+'ore/clay_deposit.layer').go();
+var sandDeposit = wp.getLayer().fromFile(path+'ore/sand_deposit.layer').go();
 
 //create some filters for later use
+var oceanFilter = wp.createFilter()
+    .belowLevel(Math.round(61-(scale*0.3)))
+    .go();
+
 var deepOceanFilter = wp.createFilter()
-    .belowLevel(Math.round(61-(10*1.3)/2))
+    .belowLevel(Math.round(61-(scale*0.65)))
     .go();
 
 var waterFilter = wp.createFilter()
@@ -198,8 +206,8 @@ if (groundmaterial === "biomes") {
 		.fromColour(255, 0, 0).toLevel(52) //custom_red_sand
 		.fromColour(150, 150, 150).toLevel(51) //stone_sand_gravel_grass
 		.fromColour(255, 127, 0).toLevel(56) //Sand_Gras_Mix
-		.fromColour(0, 127, 127).toLevel(57) //Swamp
-		.fromColour(0, 148, 255).toLevel(1) //Ocean / Rivers -> Gras, gets later overwritten
+		.fromColour(0, 127, 127).toLevel(1) //Swamp -> Gras, gets partly overwritten
+		.fromColour(0, 148, 255).toLevel(12) //Ocean / Rivers -> Sand, gets partly overwritten
 		.go();
 }
 
@@ -239,14 +247,21 @@ wp.applyHeightMap(riverMask)
 	.go();
 
 //apply deep_ocean biome with filter
-wp.applyHeightMap(biomeMap) 
+wp.applyHeightMap(biomeMap)
 	.toWorld(world)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.withFilter(deepOceanFilter)
 	.fromColour(0, 0, 0).toLevel(24) // deep_ocean
 	.go();
-wp.applyHeightMap(biomeMap) 
+wp.applyHeightMap(biomeMap)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.withFilter(oceanFilter)
+	.applyToTerrain()
+	.fromColour(0, 0, 0).toLevel(50) // ocean_floor
+	.go();
+wp.applyHeightMap(biomeMap)
 	.toWorld(world)
 	.shift(westShift, northShift)
 	.withFilter(deepOceanFilter)
@@ -420,6 +435,24 @@ wp.applyHeightMap(CoalMask)
 	.applyToLayer(coalDeposit)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
+	.go();
+
+//apply clay layer on "clay mask"
+wp.applyHeightMap(heightMap)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(clayDeposit)
+	.fromLevels(0, 15872).toLevel(0)
+	.fromLevels(15873, 65535).toLevel(1)
+	.go();
+	
+//apply clay layer on "sand mask"
+wp.applyHeightMap(heightMap)
+	.toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(sandDeposit)
+	.fromLevels(0, 15872).toLevel(0)
+	.fromLevels(15873, 65535).toLevel(1)
 	.go();
 
 //last but not least, save the world
