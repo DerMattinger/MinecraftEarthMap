@@ -7,9 +7,13 @@ But first change the "path" variable to match your folder with the script and fi
 
 The script was testet on an intel i5 6500 with 32GB RAM.
 Time / needed RAM to execute the script for 1.12:
+
 1:4000 = 3 min / 2,1GB RAM
+
 1:2000 = 14 min / 5,7GB RAM
+
 1:1000 = 62 min / 19,1GB RAM
+
 
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
