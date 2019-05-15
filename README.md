@@ -5,6 +5,12 @@ Just run the script "world.js" from "tools" -> "Run Script..." in WorldPainter.
 Be sure to place all images, layers and terrain in the right folders.
 But first change the "path" variable to match your folder with the script and files.
 
+The script was testet on an intel i5 6500 with 32GB RAM.
+Time / needed RAM to execute the script for 1.12:
+1:4000 = 3 min / 2,1GB RAM
+1:2000 = 14 min / 5,7GB RAM
+1:1000 = 62 min / 19,1GB RAM
+
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
 Bathymetry: https://visibleearth.nasa.gov/view.php?id=73963
