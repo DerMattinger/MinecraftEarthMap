@@ -1,8 +1,8 @@
 //path to your world.js script file
 var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
 
-//version: "1.12", "1.13" or "1.14"
-var version = "1.13";
+//version: "1-12", "1-13" or "1-14"
+var version = "1-13";
 
 //Scales:
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
@@ -19,27 +19,28 @@ var groundmaterial = "globecover";
 var westShift = -Math.round(537.6 * scale);
 var northShift = -Math.round(268.8 * scale);
 
-//import heightmap and masks from images
-var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+Math.round(scale)+'k.png').go();
+if (scale == 40) {
+	var globeCovera = wp.getHeightMap().fromFile(path+'images/globecover1_40k.png').go();
+	var globeCoverb = wp.getHeightMap().fromFile(path+'images/globecover2a_40k.png').go();
+	var globeCoverc = wp.getHeightMap().fromFile(path+'images/globecover2b_40k.png').go();
+	var globeCoverd = wp.getHeightMap().fromFile(path+'images/globecover3_40k.png').go();
+	var globeCovere = wp.getHeightMap().fromFile(path+'images/globecover4_40k.png').go();
+} else {
+	var globeCover = wp.getHeightMap().fromFile(path+'images/globecover'+Math.round(scale)+'k.png').go();
+}
 var biomeMap = wp.getHeightMap().fromFile(path+'images/BiomeMap'+Math.round(scale)+'k.png').go();
 var oceanBiomeMap = wp.getHeightMap().fromFile(path+'images/OceanBiomeMap'+Math.round(scale)+'k.png').go();
 var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+Math.round(scale)+'k.png').go();
-var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+Math.round(scale)+'k.png').go();
-var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+Math.round(scale)+'k.png').go();
-var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scale)+'k.png').go();
-var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'k.png').go();
-var IronMask = wp.getHeightMap().fromFile(path+'images/Iron'+Math.round(scale)+'k.png').go();
-var DiamondMask = wp.getHeightMap().fromFile(path+'images/Diamond'+Math.round(scale)+'k.png').go();
-var CoalMask = wp.getHeightMap().fromFile(path+'images/Coal'+Math.round(scale)+'k.png').go();
-var globeCover = wp.getHeightMap().fromFile(path+'images/globecover'+Math.round(scale)+'k.png').go();
 
 //first of all, create the map using the heightmap (I prefer a 16bit grayscale image, so 0-65535 color steps, to avoid rounding errors)
 //it's important to create this before importing custom terrain
+var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+Math.round(scale)+'k.png').go();
 var world = wp.createWorld()
     .fromHeightMap(heightMap)
     .shift(westShift, northShift)
     .fromLevels(0, 65535).toLevels(0, 255)
     .go();
+heightMap = null;
 
 //calculate the spawnpoint
 var spawnX = Math.round(110.5 * scale);
@@ -50,24 +51,20 @@ world.setSpawnPoint(new java.awt.Point(spawnX, spawnY));
 //now import the layers
 var biomesLayer = wp.getLayer().withName("Biomes").go();
 var riverLayer = wp.getLayer().fromFile(path+'layer/Rivers.layer').go();
-var borderLayer = wp.getLayer().fromFile(path+'layer/Borders.layer').go();
-var citiesLayer = wp.getLayer().fromFile(path+'layer/Cities.layer').go();
 var mesaLayer = wp.getLayer().fromFile(path+'layer/Mesa.layer').go();
 var swampLayer = wp.getLayer().fromFile(path+'layer/Swamp.layer').go();
-var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
-var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
-var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
-var coalDeposit = wp.getLayer().fromFile(path+'ore/coal_deposit.layer').go();
-var clayDeposit = wp.getLayer().fromFile(path+'ore/clay_deposit.layer').go();
-var sandDeposit = wp.getLayer().fromFile(path+'ore/sand_deposit.layer').go();
 
 //create some filters for later use
 var oceanFilter = wp.createFilter()
+    .aboveLevel(0)
     .belowLevel(Math.round(61-(scale*0.3)))
+    .onlyOnBiome(0) // ocean
     .go();
 
 var deepOceanFilter = wp.createFilter()
+    .aboveLevel(0)
     .belowLevel(Math.round(61-(scale*0.65)))
+    .onlyOnBiome(0) // ocean
     .go();
 
 var waterFilter = wp.createFilter()
@@ -105,50 +102,6 @@ var terrain = wp.getTerrain().fromFile(path+'terrain/Sand_Gras_Mix.terrain').go(
 var sandGrasMix = wp.installCustomTerrain(terrain).toWorld(world).inSlot(10).go(); //Slot 10 = 56
 var terrain = wp.getTerrain().fromFile(path+'terrain/Swamp.terrain').go();
 var swamp = wp.installCustomTerrain(terrain).toWorld(world).inSlot(11).go(); //Slot 11 = 57
-
-//apply biomes
-wp.applyHeightMap(biomeMap) 
-    .toWorld(world)
-	.shift(westShift, northShift)
-	.applyToLayer(biomesLayer)
-	.fromColour(0, 0, 255).toLevel(149) //Af - modified_jungle 0000FF 
-	.fromColour(0, 120, 255).toLevel(21) //Am - jungle 0078FF
-	.fromColour(70, 170, 250).toLevel(23) //Aw - jungle_edge 46AAFA
-	.fromColour(255, 0, 0).toLevel(2) //BWh - desert FF0000
-	.fromColour(255, 150, 150).toLevel(17) //BWk - desert_hills FF9696
-	.fromColour(245, 165, 0).toLevel(35) //BSh - savanna F5A500
-	.fromColour(255, 220, 100).toLevel(130) //BSk - desert_lakes FFDC64
-	.fromColour(255, 255, 0).toLevel(1) //Csa - plains FFFF00
-	.fromColour(200, 200, 0).toLevel(129) //Csb - sunflower_plains C8C800
-	.fromColour(150, 255, 150).toLevel(151) //Cwa - modified_jungle_edge 96FF96
-	.fromColour(100, 200, 100).toLevel(22) //Cwb - jungle_hills 64C864
-	.fromColour(50, 150, 50).toLevel(131) //Cwc - gravelly_mountains 329632
-	.fromColour(200, 255, 80).toLevel(4) //Cfa - forest C8FF50
-	.fromColour(100, 255, 80).toLevel(132) //Cfb - flower_forest 64FF50
-	.fromColour(50, 200, 0).toLevel(3) //Cfc - mountains 32C800
-	.fromColour(255, 0, 255).toLevel(36) //Dsa - savanna_plateau FF00FF
-	.fromColour(200, 0, 200).toLevel(38) //Dsb - wooded_badlands_plateau C800C8
-	.fromColour(150, 50, 150).toLevel(30) //Dsc - snowy_taiga 963296
-	.fromColour(150, 100, 150).toLevel(161) //Dsd - giant_spruce_taiga_hills 966496
-	.fromColour(170, 175, 255).toLevel(6) //Dwa - swamp AAAFFF
-	.fromColour(90, 120, 220).toLevel(134) //Dwb - swampland_hills 5A78DC
-	.fromColour(75, 80, 180).toLevel(32) //Dwc - giant_tree_taiga 4B50B4
-	.fromColour(50, 0, 135).toLevel(160) //Dwd - giant_spruce_taiga 320087
-	.fromColour(0, 255, 255).toLevel(29) //Dfa - dark_forest 00FFFF
-	.fromColour(55, 200, 255).toLevel(5) //Dfb - taiga 37C8FF
-	.fromColour(0, 125, 125).toLevel(33) //Dfc - giant_tree_taiga_hills 007D7D
-	.fromColour(0, 70, 95).toLevel(13) //Dfd - snowy_mountains 00465F
-	.fromColour(178, 178, 178).toLevel(12) //ET - snowy_tundra B2B2B2
-	.fromColour(102, 102, 102).toLevel(140) //EF - ice_spikes 666666
-	.fromColour(200, 200, 200).toLevel(16) // - beach B2B2B2
-	.fromColour(220, 220, 220).toLevel(26) // - snowy_beach DCDCDC
-	.fromColour(255, 100, 0).toLevel(37) // - badlands FF6400
-	.fromColour(0, 0, 0).toLevel(0) //Ocean - ocean 000000
-	//Australia
-	.fromColour(255, 20, 0).toLevel(2) //BWh - desert FF0000
-	.fromColour(255, 170, 150).toLevel(17) //BWk - desert_hills FF9696
-	.fromColour(255, 255, 100).toLevel(130) //BSk - desert_lakes FFDC64
-	.go();
 
 //apply terrain to biomes
 if (groundmaterial === "biomes") {
@@ -194,22 +147,181 @@ if (groundmaterial === "biomes") {
 		.fromColour(255, 170, 150).toLevel(52) //BWk - custom_red_sand
 		.fromColour(255, 255, 100).toLevel(52) //BSk - custom_red_sand
 		.go();
-}else if (groundmaterial === "globecover") {
-	wp.applyHeightMap(globeCover) 
-		.toWorld(world)
-		.shift(westShift, northShift)
-		.applyToTerrain()
-		.fromColour(0, 255, 0).toTerrain(1) //Gras
-		.fromColour(255, 255, 0).toTerrain(53) //custom_sand
-		.fromColour(255, 255, 255).toTerrain(40) // deep_snow
-		.fromColour(127, 0, 0).toTerrain(55) //Podzol
-		.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
-		.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
-		.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
-		.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
-		.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
-		.go();
+} else if (groundmaterial === "globecover") {
+	if (scale == 40) {
+		wp.applyHeightMap(globeCovera) 
+			.toWorld(world)
+			.shift(westShift, northShift)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCovera) 
+			.toWorld(world)
+			.shift(westShift, northShift)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+		wp.applyHeightMap(globeCoverb) 
+			.toWorld(world)
+			.shift(0, northShift)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCoverb) 
+			.toWorld(world)
+			.shift(0, northShift)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+		wp.applyHeightMap(globeCoverc) 
+			.toWorld(world)
+			.shift(-westShift/2, northShift)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCoverc) 
+			.toWorld(world)
+			.shift(-westShift/2, northShift)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+		wp.applyHeightMap(globeCoverd) 
+			.toWorld(world)
+			.shift(westShift, 0)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCoverd) 
+			.toWorld(world)
+			.shift(westShift, 0)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+		wp.applyHeightMap(globeCovere) 
+			.toWorld(world)
+			.shift(0, 0)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCovere)
+			.toWorld(world)
+			.shift(0, 0)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+	} else {
+		wp.applyHeightMap(globeCover) 
+			.toWorld(world)
+			.shift(westShift, northShift)
+			.applyToTerrain()
+			.fromColour(0, 255, 0).toTerrain(1) //Gras
+			.fromColour(255, 255, 0).toTerrain(53) //custom_sand
+			.fromColour(255, 255, 255).toTerrain(40) // deep_snow
+			.fromColour(127, 0, 0).toTerrain(55) //Podzol
+			.fromColour(255, 0, 0).toTerrain(52) //custom_red_sand
+			.fromColour(150, 150, 150).toTerrain(51) //stone_sand_gravel_grass
+			.fromColour(255, 127, 0).toTerrain(56) //Sand_Gras_Mix
+			.fromColour(0, 127, 127).toTerrain(1) //Swamp -> Gras, gets partly overwritten
+			.fromColour(0, 148, 255).toTerrain(5) //Ocean / Rivers -> Sand, gets partly overwritten
+			.go();
+		//apply swamp layer to one biome
+		wp.applyHeightMap(globeCover) 
+			.toWorld(world)
+			.shift(westShift, northShift)
+			.applyToLayer(swampLayer)
+			.fromColour(0, 127, 127).toLevel(1)
+			.go();
+	}
 }
+
+//apply biomes
+wp.applyHeightMap(biomeMap) 
+    .toWorld(world)
+	.shift(westShift, northShift)
+	.applyToLayer(biomesLayer)
+	.fromColour(0, 0, 255).toLevel(149) //Af - modified_jungle 0000FF 
+	.fromColour(0, 120, 255).toLevel(21) //Am - jungle 0078FF
+	.fromColour(70, 170, 250).toLevel(23) //Aw - jungle_edge 46AAFA
+	.fromColour(255, 0, 0).toLevel(2) //BWh - desert FF0000
+	.fromColour(255, 150, 150).toLevel(17) //BWk - desert_hills FF9696
+	.fromColour(245, 165, 0).toLevel(35) //BSh - savanna F5A500
+	.fromColour(255, 220, 100).toLevel(130) //BSk - desert_lakes FFDC64
+	.fromColour(255, 255, 0).toLevel(1) //Csa - plains FFFF00
+	.fromColour(200, 200, 0).toLevel(129) //Csb - sunflower_plains C8C800
+	.fromColour(150, 255, 150).toLevel(151) //Cwa - modified_jungle_edge 96FF96
+	.fromColour(100, 200, 100).toLevel(22) //Cwb - jungle_hills 64C864
+	.fromColour(50, 150, 50).toLevel(131) //Cwc - gravelly_mountains 329632
+	.fromColour(200, 255, 80).toLevel(4) //Cfa - forest C8FF50
+	.fromColour(100, 255, 80).toLevel(132) //Cfb - flower_forest 64FF50
+	.fromColour(50, 200, 0).toLevel(3) //Cfc - mountains 32C800
+	.fromColour(255, 0, 255).toLevel(36) //Dsa - savanna_plateau FF00FF
+	.fromColour(200, 0, 200).toLevel(38) //Dsb - wooded_badlands_plateau C800C8
+	.fromColour(150, 50, 150).toLevel(30) //Dsc - snowy_taiga 963296
+	.fromColour(150, 100, 150).toLevel(161) //Dsd - giant_spruce_taiga_hills 966496
+	.fromColour(170, 175, 255).toLevel(6) //Dwa - swamp AAAFFF
+	.fromColour(90, 120, 220).toLevel(134) //Dwb - swampland_hills 5A78DC
+	.fromColour(75, 80, 180).toLevel(32) //Dwc - giant_tree_taiga 4B50B4
+	.fromColour(50, 0, 135).toLevel(160) //Dwd - giant_spruce_taiga 320087
+	.fromColour(0, 255, 255).toLevel(29) //Dfa - dark_forest 00FFFF
+	.fromColour(55, 200, 255).toLevel(5) //Dfb - taiga 37C8FF
+	.fromColour(0, 125, 125).toLevel(33) //Dfc - giant_tree_taiga_hills 007D7D
+	.fromColour(0, 70, 95).toLevel(13) //Dfd - snowy_mountains 00465F
+	.fromColour(178, 178, 178).toLevel(12) //ET - snowy_tundra B2B2B2
+	.fromColour(102, 102, 102).toLevel(140) //EF - ice_spikes 666666
+	.fromColour(200, 200, 200).toLevel(16) // - beach B2B2B2
+	.fromColour(220, 220, 220).toLevel(26) // - snowy_beach DCDCDC
+	.fromColour(255, 100, 0).toLevel(37) // - badlands FF6400
+	.fromColour(0, 0, 0).toLevel(0) //Ocean - ocean 000000
+	//Australia
+	.fromColour(255, 20, 0).toLevel(2) //BWh - desert FF0000
+	.fromColour(255, 170, 150).toLevel(17) //BWk - desert_hills FF9696
+	.fromColour(255, 255, 100).toLevel(130) //BSk - desert_lakes FFDC64
+	.go();
 
 //apply mesa layer to one biome
 wp.applyHeightMap(biomeMap) 
@@ -218,16 +330,6 @@ wp.applyHeightMap(biomeMap)
 	.applyToLayer(mesaLayer)
 	.fromColour(255, 100, 0).toTerrain(1)
 	.go();
-
-//apply swamp layer to one biome
-if (groundmaterial === "globecover") {
-	wp.applyHeightMap(globeCover) 
-		.toWorld(world)
-		.shift(westShift, northShift)
-		.applyToLayer(swampLayer)
-		.fromColour(0, 127, 127).toTerrain(1)
-		.go();
-}
 
 //apply MyRiver Layer on "river mask"
 wp.applyHeightMap(riverMask)
@@ -269,8 +371,8 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(0, 0, 0).toLevel(48) // deep_ocean_floor
 	.go();
 
-//1.13 Ocean Biomes
-if (version === "1.13" || version === "1.14") {
+//1-13 Ocean Biomes
+if (version === "1-13" || version === "1-14") {
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
 		.shift(westShift, northShift)
@@ -314,7 +416,7 @@ if (version === "1.13" || version === "1.14") {
 		.go();
 }
 
-if (version === "1.14") {
+if (version === "1-14") {
 	wp.applyHeightMap(biomeMap) 
 		.toWorld(world)
 		.shift(westShift, northShift)
@@ -322,6 +424,19 @@ if (version === "1.14") {
 		.fromColour(0, 120, 255).toLevel(189) //Am - bamboo_jungle 0000FF 
 		.go();
 }
+
+if (scale == 40) {
+	globeCovera = null;
+	globeCoverb = null;
+	globeCoverc = null;
+	globeCoverd = null;
+	globeCovere = null;
+	globeCover = null;
+} else {
+	globeCover = null;
+}
+biomeMap = null;
+oceanBiomeMap = null;
 
 //replace river terrain on "river mask" with filter
 wp.applyHeightMap(riverMask)
@@ -349,7 +464,8 @@ wp.applyHeightMap(riverMask)
 	.fromLevel(1).toLevel(0)
 	.withFilter(waterFilter)
 	.go()
-
+	
+var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+Math.round(scale)+'k.png').go();
 //apply frozen_ocean on "ice mask"
 wp.applyHeightMap(iceMask)
 	.toWorld(world)
@@ -357,8 +473,7 @@ wp.applyHeightMap(iceMask)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(10) // frozen_ocean
 	.go();
-
-if (version === "1.13" || version === "1.14") {
+if (version === "1-13" || version === "1-14") {
 	//apply deep_frozen_ocean on "ice mask"
 	wp.applyHeightMap(iceMask)
 		.toWorld(world)
@@ -368,8 +483,11 @@ if (version === "1.13" || version === "1.14") {
 		.withFilter(deepOceanFilter)
 		.go();
 }
+iceMask = null;
 
 //apply Border layer on "border mask"
+var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+Math.round(scale)+'k.png').go();
+var borderLayer = wp.getLayer().fromFile(path+'layer/Borders.layer').go();
 wp.applyHeightMap(borderMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -384,8 +502,12 @@ wp.applyHeightMap(riverMask)
 	.applyToLayer(borderLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
+borderMask = null;
+borderLayer = null;
 
 //apply Cities layer on "cities mask"
+var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scale)+'k.png').go();
+var citiesLayer = wp.getLayer().fromFile(path+'layer/Cities.layer').go();
 wp.applyHeightMap(citiesMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -400,8 +522,12 @@ wp.applyHeightMap(riverMask)
 	.applyToLayer(citiesLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
+citiesMask = null;
+citiesLayer = null;
 
 //apply Gold layer on "gold mask"
+var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'k.png').go();
+var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
 wp.applyHeightMap(GoldMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -409,8 +535,12 @@ wp.applyHeightMap(GoldMask)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
+GoldMask = null;
+goldDeposit = null;	
 	
 //apply Iron layer on "iron mask"
+var IronMask = wp.getHeightMap().fromFile(path+'images/Iron'+Math.round(scale)+'k.png').go();
+var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
 wp.applyHeightMap(IronMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -418,8 +548,12 @@ wp.applyHeightMap(IronMask)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
+IronMask = null;
+ironDeposit = null;
 	
 //apply Diamond layer on "diamond mask"
+var DiamondMask = wp.getHeightMap().fromFile(path+'images/Diamond'+Math.round(scale)+'k.png').go();
+var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
 wp.applyHeightMap(DiamondMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -427,8 +561,12 @@ wp.applyHeightMap(DiamondMask)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
+DiamondMask = null;
+diamondDeposit = null;	
 	
 //apply Coal layer on "coal mask"
+var CoalMask = wp.getHeightMap().fromFile(path+'images/Coal'+Math.round(scale)+'k.png').go();
+var coalDeposit = wp.getLayer().fromFile(path+'ore/coal_deposit.layer').go();
 wp.applyHeightMap(CoalMask)
 	.toWorld(world)
 	.shift(westShift, northShift)
@@ -436,26 +574,39 @@ wp.applyHeightMap(CoalMask)
 	.fromLevel(0).toLevel(0)
 	.fromLevels(1, 255).toLevel(1)
 	.go();
-
+CoalMask = null;
+coalDeposit = null;
+	
+//the following layers only on land
+var OceanMap = wp.getHeightMap().fromFile(path+'images/Mask'+Math.round(scale)+'k.png').go();
+	
 //apply clay layer on "clay mask"
-wp.applyHeightMap(heightMap)
+var clayDeposit = wp.getLayer().fromFile(path+'ore/clay_deposit.layer').go();
+wp.applyHeightMap(OceanMap)
 	.toWorld(world)
 	.shift(westShift, northShift)
 	.applyToLayer(clayDeposit)
-	.fromLevels(0, 15872).toLevel(0)
-	.fromLevels(15873, 65535).toLevel(1)
+	.fromLevel(0).toLevel(1)
+	.fromLevels(1, 255).toLevel(0)
 	.go();
+clayDeposit = null;
 	
 //apply clay layer on "sand mask"
-wp.applyHeightMap(heightMap)
+var sandDeposit = wp.getLayer().fromFile(path+'ore/sand_deposit.layer').go();
+wp.applyHeightMap(OceanMap)
 	.toWorld(world)
 	.shift(westShift, northShift)
 	.applyToLayer(sandDeposit)
-	.fromLevels(0, 15872).toLevel(0)
-	.fromLevels(15873, 65535).toLevel(1)
+	.fromLevel(0).toLevel(1)
+	.fromLevels(1, 255).toLevel(0)
 	.go();
+sandDeposit = null;
+
+OceanMap = null;
 
 //last but not least, save the world
 wp.saveWorld(world)
-	.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'.world')
+	.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'_'+version+'.world')
 	.go();
+	
+world = null;
