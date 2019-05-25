@@ -503,7 +503,6 @@ wp.applyHeightMap(riverMask)
 	.fromLevel(1).toLevel(0)
 	.go()
 borderMask = null;
-borderLayer = null;
 
 //apply Cities layer on "cities mask"
 var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scale)+'k.png').go();
@@ -522,8 +521,48 @@ wp.applyHeightMap(riverMask)
 	.applyToLayer(citiesLayer)
 	.fromLevel(1).toLevel(0)
 	.go()
-citiesMask = null;
 citiesLayer = null;
+
+//apply streets layer on "street mask"
+var streetMask = wp.getHeightMap().fromFile(path+'images/street'+Math.round(scale)+'k.png').go();
+var streetLayer = wp.getLayer().fromFile(path+'layer/street.layer').go();
+wp.applyHeightMap(streetMask)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(streetLayer)
+	.fromLevel(0).toLevel(0)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
+//remove street layer on "river mask"
+wp.applyHeightMap(riverMask)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(streetLayer)
+	.fromLevel(1).toLevel(0)
+	.go()
+//remove border layer on "steet mask"
+wp.applyHeightMap(streetMask)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(borderLayer)
+	.fromLevel(1).toLevel(0)
+	.go()
+//remove street layer on "city mask"
+wp.applyHeightMap(citiesMask)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(streetLayer)
+	.fromLevel(1).toLevel(0)
+	.go()
+streetMask = null;
+streetLayer = null;
+
+borderLayer = null;
+citiesMask = null;
 
 //apply Gold layer on "gold mask"
 var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'k.png').go();
