@@ -17,10 +17,17 @@ Time / needed RAM to execute the script for 1.12:
 
 ## Sources
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
+
 Bathymetry: https://visibleearth.nasa.gov/view.php?id=73963
+
 Globcover: http://due.esrin.esa.int/page_globcover.php
+
 Köppen climate classification: https://figshare.com/articles/Present_and_future_K_ppen-Geiger_climate_classification_maps_at_1-km_resolution/6396959/2
+
 Sea Temperatur: https://svs.gsfc.nasa.gov/3652
+
 Cities & Ice: http://www.shadedrelief.com/natural3/pages/extra.html
+
 Mineral Distribution: https://mrdata.usgs.gov/major-deposits/
+
 OSM-Data: https://download.geofabrik.de/
