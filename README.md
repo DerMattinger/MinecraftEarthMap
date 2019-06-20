@@ -31,3 +31,17 @@ Cities & Ice: http://www.shadedrelief.com/natural3/pages/extra.html
 Mineral Distribution: https://mrdata.usgs.gov/major-deposits/
 
 OSM-Data: https://download.geofabrik.de/
+
+
+## Images
+The basement of the script are the various images. To determine the right resolution, I referred to Minecraft's region files, which have a size of 512x512 blocks. The final map should be a multiple of 512. The next step in my process was to edit the existing images. For example, the "Köppen climate classification" image had a original resolution of 43200x21600 pixel. The nearest fit for the map is 43008x21504, so I changed the canvas size (I didn't want to resize the image, otherwise information would be lost. Anti-aliasing is also forbidden since the script assigns a biome to a specific RGB color.)
+
+The same step was made for Globcover, except the original resolution was 129600x55800, which is not the 2:1 format. That's because antarctica isn't pictured in this image. At first, I changed the canvas size to 129600x64800 (added the new pixels at the bottom of the existing image), then resized the image to 43200x21600 pixel (this is exact 1/3) without resampling (again, we don't want anti-aliasing) and then changed the canvas again to match 43008x21504.
+
+For the heightmaps, I combined the surface elevation and the bathymetry images of the nasa, which had a resolutions of 21600x10800. At first, I resized the images to 43200x21600, this time with resampling (Bicubic interpolation), so we get smoother mountains. Later, I also used a blur effect for a more realistic elevation in Minecraft.
+
+For a lot of images from "shadedrelief" I had to resize from 16200x8100 pixel and used a posterize effect afterwards, because layers are only applied or not applied /  1 or 0 / black or white.
+
+For the OSM-Data I used QGIS3 to export the images.
+
+In summary, each image has an original resolution of 43200x21600 and is then cut to 43008x21504 (even on all sides).
