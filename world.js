@@ -10,14 +10,19 @@ var version = "1-13";
 //"40" = scale 1:1000 - uses 43008x20504 pixel images
 var scale = 10;
 
+//scale / resize of the images in percent, standard / no change = 100
+var resize = 100;
+
 //groundmaterial: "globecover", or "biomes"
 var groundmaterial = "globecover";
 
-//don't change anything from here!
+//######################################
+//## Don't change anything from here! ##
+//######################################
 
 //shift the image, so 0,0 is in the exact middle of the map (latitude and longitude 0,0)
-var westShift = -Math.round(537.6 * scale);
-var northShift = -Math.round(268.8 * scale);
+var westShift = -Math.round(537.6 * scale * (resize / 100));
+var northShift = -Math.round(268.8 * scale * (resize / 100));
 
 if (scale == 40) {
 	var globeCovera = wp.getHeightMap().fromFile(path+'images/globecover1_40k.png').go();
@@ -37,6 +42,7 @@ var riverMask = wp.getHeightMap().fromFile(path+'images/WaterMap'+Math.round(sca
 var heightMap = wp.getHeightMap().fromFile(path+'images/HeightMap'+Math.round(scale)+'k.png').go();
 var world = wp.createWorld()
     .fromHeightMap(heightMap)
+    .scale(resize)
     .shift(westShift, northShift)
     .fromLevels(0, 65535).toLevels(0, 255)
     .go();
@@ -107,6 +113,7 @@ var swamp = wp.installCustomTerrain(terrain).toWorld(world).inSlot(11).go(); //S
 if (groundmaterial === "biomes") {
 	wp.applyHeightMap(biomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToTerrain()
 		.fromColour(0, 0, 255).toTerrain(1) //Af - Gras
@@ -151,6 +158,7 @@ if (groundmaterial === "biomes") {
 	if (scale == 40) {
 		wp.applyHeightMap(globeCovera) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, northShift)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -166,12 +174,14 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCovera) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, northShift)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
 			.go();
 		wp.applyHeightMap(globeCoverb) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(0, northShift)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -187,12 +197,14 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCoverb) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(0, northShift)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
 			.go();
 		wp.applyHeightMap(globeCoverc) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(-westShift/2, northShift)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -208,12 +220,14 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCoverc) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(-westShift/2, northShift)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
 			.go();
 		wp.applyHeightMap(globeCoverd) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, 0)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -229,12 +243,14 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCoverd) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, 0)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
 			.go();
 		wp.applyHeightMap(globeCovere) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(0, 0)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -250,6 +266,7 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCovere)
 			.toWorld(world)
+			.scale(resize)
 			.shift(0, 0)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
@@ -257,6 +274,7 @@ if (groundmaterial === "biomes") {
 	} else {
 		wp.applyHeightMap(globeCover) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, northShift)
 			.applyToTerrain()
 			.fromColour(0, 255, 0).toTerrain(1) //Gras
@@ -272,6 +290,7 @@ if (groundmaterial === "biomes") {
 		//apply swamp layer to one biome
 		wp.applyHeightMap(globeCover) 
 			.toWorld(world)
+			.scale(resize)
 			.shift(westShift, northShift)
 			.applyToLayer(swampLayer)
 			.fromColour(0, 127, 127).toLevel(1)
@@ -282,6 +301,7 @@ if (groundmaterial === "biomes") {
 //apply biomes
 wp.applyHeightMap(biomeMap) 
     .toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromColour(0, 0, 255).toLevel(149) //Af - modified_jungle 0000FF 
@@ -326,6 +346,7 @@ wp.applyHeightMap(biomeMap)
 //apply mesa layer to one biome
 wp.applyHeightMap(biomeMap) 
     .toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(mesaLayer)
 	.fromColour(255, 100, 0).toTerrain(1)
@@ -334,6 +355,7 @@ wp.applyHeightMap(biomeMap)
 //apply MyRiver Layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(riverLayer)
 	.fromLevel(0).toLevel(0)
@@ -343,6 +365,7 @@ wp.applyHeightMap(riverMask)
 //apply ocean biome on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(0) //ocean
@@ -351,6 +374,7 @@ wp.applyHeightMap(riverMask)
 //apply deep_ocean biome with filter
 wp.applyHeightMap(biomeMap)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.withFilter(deepOceanFilter)
@@ -358,6 +382,7 @@ wp.applyHeightMap(biomeMap)
 	.go();
 wp.applyHeightMap(biomeMap)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.withFilter(oceanFilter)
 	.applyToTerrain()
@@ -365,6 +390,7 @@ wp.applyHeightMap(biomeMap)
 	.go();
 wp.applyHeightMap(biomeMap)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.withFilter(deepOceanFilter)
 	.applyToTerrain()
@@ -375,6 +401,7 @@ wp.applyHeightMap(biomeMap)
 if (version === "1-13" || version === "1-14") {
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.fromColour(0, 150, 150).toLevel(46) //Cold Ocean - ocean 009696
@@ -385,6 +412,7 @@ if (version === "1-13" || version === "1-14") {
 			
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.withFilter(deepOceanFilter)
@@ -393,6 +421,7 @@ if (version === "1-13" || version === "1-14") {
 
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.withFilter(deepOceanFilter)
@@ -401,6 +430,7 @@ if (version === "1-13" || version === "1-14") {
 
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.withFilter(deepOceanFilter)
@@ -409,6 +439,7 @@ if (version === "1-13" || version === "1-14") {
 
 	wp.applyHeightMap(oceanBiomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.withFilter(deepOceanFilter)
@@ -419,6 +450,7 @@ if (version === "1-13" || version === "1-14") {
 if (version === "1-14") {
 	wp.applyHeightMap(biomeMap) 
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.fromColour(0, 120, 255).toLevel(189) //Am - bamboo_jungle 0000FF 
@@ -441,6 +473,7 @@ oceanBiomeMap = null;
 //replace river terrain on "river mask" with filter
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToTerrain()
 	.fromLevels(1,255).toLevel(50) //Ocean Floor
@@ -450,6 +483,7 @@ wp.applyHeightMap(riverMask)
 //replace ocean biome with river biome with filter
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1,255).toLevel(7) //River
@@ -459,6 +493,7 @@ wp.applyHeightMap(riverMask)
 //remove MyRiver layer on "river mask" with ocean filter
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(riverLayer)
 	.fromLevel(1).toLevel(0)
@@ -469,6 +504,7 @@ var iceMask = wp.getHeightMap().fromFile(path+'images/Ice'+Math.round(scale)+'k.
 //apply frozen_ocean on "ice mask"
 wp.applyHeightMap(iceMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(biomesLayer)
 	.fromLevels(1, 255).toLevel(10) // frozen_ocean
@@ -477,6 +513,7 @@ if (version === "1-13" || version === "1-14") {
 	//apply deep_frozen_ocean on "ice mask"
 	wp.applyHeightMap(iceMask)
 		.toWorld(world)
+		.scale(resize)
 		.shift(westShift, northShift)
 		.applyToLayer(biomesLayer)
 		.fromLevels(1, 255).toLevel(50) // deep_frozen_ocean
@@ -490,6 +527,7 @@ var borderMask = wp.getHeightMap().fromFile(path+'images/Border'+Math.round(scal
 var borderLayer = wp.getLayer().fromFile(path+'layer/Borders.layer').go();
 wp.applyHeightMap(borderMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(borderLayer)
 	.fromLevel(0).toLevel(0)
@@ -498,6 +536,7 @@ wp.applyHeightMap(borderMask)
 //remove border layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(borderLayer)
 	.fromLevel(1).toLevel(0)
@@ -509,6 +548,7 @@ var citiesMask = wp.getHeightMap().fromFile(path+'images/Cities'+Math.round(scal
 var citiesLayer = wp.getLayer().fromFile(path+'layer/Cities.layer').go();
 wp.applyHeightMap(citiesMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(citiesLayer)
 	.fromLevel(0).toLevel(0)
@@ -517,6 +557,7 @@ wp.applyHeightMap(citiesMask)
 //remove Cities layer on "river mask"
 wp.applyHeightMap(riverMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(citiesLayer)
 	.fromLevel(1).toLevel(0)
@@ -569,6 +610,7 @@ var GoldMask = wp.getHeightMap().fromFile(path+'images/Gold'+Math.round(scale)+'
 var goldDeposit = wp.getLayer().fromFile(path+'ore/gold_deposit.layer').go();
 wp.applyHeightMap(GoldMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(goldDeposit)
 	.fromLevel(0).toLevel(0)
@@ -582,6 +624,7 @@ var IronMask = wp.getHeightMap().fromFile(path+'images/Iron'+Math.round(scale)+'
 var ironDeposit = wp.getLayer().fromFile(path+'ore/iron_deposit.layer').go();
 wp.applyHeightMap(IronMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(ironDeposit)
 	.fromLevel(0).toLevel(0)
@@ -595,6 +638,7 @@ var DiamondMask = wp.getHeightMap().fromFile(path+'images/Diamond'+Math.round(sc
 var diamondDeposit = wp.getLayer().fromFile(path+'ore/diamond_deposit.layer').go();
 wp.applyHeightMap(DiamondMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(diamondDeposit)
 	.fromLevel(0).toLevel(0)
@@ -608,6 +652,7 @@ var CoalMask = wp.getHeightMap().fromFile(path+'images/Coal'+Math.round(scale)+'
 var coalDeposit = wp.getLayer().fromFile(path+'ore/coal_deposit.layer').go();
 wp.applyHeightMap(CoalMask)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(coalDeposit)
 	.fromLevel(0).toLevel(0)
@@ -623,6 +668,7 @@ var OceanMap = wp.getHeightMap().fromFile(path+'images/Mask'+Math.round(scale)+'
 var clayDeposit = wp.getLayer().fromFile(path+'ore/clay_deposit.layer').go();
 wp.applyHeightMap(OceanMap)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(clayDeposit)
 	.fromLevel(0).toLevel(1)
@@ -634,6 +680,7 @@ clayDeposit = null;
 var sandDeposit = wp.getLayer().fromFile(path+'ore/sand_deposit.layer').go();
 wp.applyHeightMap(OceanMap)
 	.toWorld(world)
+	.scale(resize)
 	.shift(westShift, northShift)
 	.applyToLayer(sandDeposit)
 	.fromLevel(0).toLevel(1)
@@ -644,8 +691,14 @@ sandDeposit = null;
 OceanMap = null;
 
 //last but not least, save the world
-wp.saveWorld(world)
-	.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'_'+version+'.world')
-	.go();
-	
+if (resize == 100) {
+	wp.saveWorld(world)
+		.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'_'+version+'.world')
+		.go();
+} else {
+	wp.saveWorld(world)
+		.toFile(path+'earth_1-'+Math.round(40/scale*1000)+'_'+version+'(resized by '+resize+' percent).world')
+		.go();
+}
+
 world = null;
