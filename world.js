@@ -2,7 +2,7 @@
 var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
 
 //version: "1-12", "1-13" or "1-14"
-var version = "1-13";
+var version = "1-12";
 
 //Scales:
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
@@ -688,7 +688,76 @@ wp.applyHeightMap(OceanMap)
 	.go();
 sandDeposit = null;
 
+//apply red sand layer on land
+var redSandDeposit = wp.getLayer().fromFile(path+'ore/red_sand_deposit.layer').go();
+wp.applyHeightMap(OceanMap)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(redSandDeposit)
+	.fromLevel(0).toLevel(1)
+	.fromLevels(1, 255).toLevel(0)
+	.go();
+redSandDeposit = null;
+
+//apply emerald layer everywhere
+var emeraldDeposit = wp.getLayer().fromFile(path+'ore/emerald_deposit.layer').go();
+wp.applyHeightMap(OceanMap)
+	.toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(emeraldDeposit)
+	.fromLevel(0).toLevel(1)
+	.fromLevels(1, 255).toLevel(1)
+	.go();
+emeraldDeposit = null;
+
 OceanMap = null;
+
+//end-portal
+var portalMask = wp.getHeightMap().fromFile(path+'images/Portal'+Math.round(scale)+'k.png').go();
+var Endportal_East = wp.getLayer().fromFile(path+'portal/Endportal_East.layer').go();
+var Endportal_North = wp.getLayer().fromFile(path+'portal/Endportal_North.layer').go();
+var Endportal_South = wp.getLayer().fromFile(path+'portal/Endportal_South.layer').go();
+var Endportal_West = wp.getLayer().fromFile(path+'portal/Endportal_West.layer').go();
+
+wp.applyHeightMap(portalMask) 
+    .toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(Endportal_East)
+	.fromColour(255, 255, 0).toLevel(1)
+	.go();
+	
+wp.applyHeightMap(portalMask) 
+    .toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(Endportal_North)
+	.fromColour(0, 255, 0).toLevel(1)
+	.go();
+	
+wp.applyHeightMap(portalMask) 
+    .toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(Endportal_South)
+	.fromColour(255, 0, 0).toLevel(1)
+	.go();
+	
+wp.applyHeightMap(portalMask) 
+    .toWorld(world)
+	.scale(resize)
+	.shift(westShift, northShift)
+	.applyToLayer(Endportal_West)
+	.fromColour(0, 0, 255).toLevel(1)
+	.go();
+
+var portalMask = null;
+var Endportal_East = null;
+var Endportal_North = null;
+var Endportal_South = null;
+var Endportal_West = null;
 
 //last but not least, save the world
 if (resize == 100) {
