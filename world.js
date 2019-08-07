@@ -141,7 +141,7 @@ if (groundmaterial === "biomes") {
 		.fromColour(50, 0, 135).toTerrain(55) //Dwd - Podzol
 		.fromColour(0, 255, 255).toTerrain(1) //Dfa - Gras
 		.fromColour(55, 200, 255).toTerrain(1) //Dfb - Gras
-		.fromColour(0, 125, 125).toTerrain(55) //Dfc - Podzol
+		.fromColour(0, 125, 125).toTerrain(1) //Dfc - Gras
 		.fromColour(0, 70, 95).toTerrain(1) //Dfd - Gras
 		.fromColour(178, 178, 178).toTerrain(40) //ET - deep_snow
 		.fromColour(102, 102, 102).toTerrain(49) //EF - Custom Deep Snow
@@ -316,7 +316,7 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(150, 255, 150).toLevel(151) //Cwa - modified_jungle_edge 96FF96
 	.fromColour(100, 200, 100).toLevel(22) //Cwb - jungle_hills 64C864
 	.fromColour(50, 150, 50).toLevel(131) //Cwc - gravelly_mountains 329632
-	.fromColour(200, 255, 80).toLevel(4) //Cfa - forest C8FF50
+	.fromColour(200, 255, 80).toLevel(132) //Cfa - flower_forest C8FF50
 	.fromColour(100, 255, 80).toLevel(132) //Cfb - flower_forest 64FF50
 	.fromColour(50, 200, 0).toLevel(3) //Cfc - mountains 32C800
 	.fromColour(255, 0, 255).toLevel(36) //Dsa - savanna_plateau FF00FF
@@ -327,9 +327,9 @@ wp.applyHeightMap(biomeMap)
 	.fromColour(90, 120, 220).toLevel(134) //Dwb - swampland_hills 5A78DC
 	.fromColour(75, 80, 180).toLevel(32) //Dwc - giant_tree_taiga 4B50B4
 	.fromColour(50, 0, 135).toLevel(160) //Dwd - giant_spruce_taiga 320087
-	.fromColour(0, 255, 255).toLevel(29) //Dfa - dark_forest 00FFFF
-	.fromColour(55, 200, 255).toLevel(5) //Dfb - taiga 37C8FF
-	.fromColour(0, 125, 125).toLevel(33) //Dfc - giant_tree_taiga_hills 007D7D
+	.fromColour(0, 255, 255).toLevel(4) //Dfa - forest 00FFFF
+	.fromColour(55, 200, 255).toLevel(29) //Dfb - dark_forest 37C8FF
+	.fromColour(0, 125, 125).toLevel(5) //Dfc - taiga 007D7D
 	.fromColour(0, 70, 95).toLevel(13) //Dfd - snowy_mountains 00465F
 	.fromColour(178, 178, 178).toLevel(12) //ET - snowy_tundra B2B2B2
 	.fromColour(102, 102, 102).toLevel(140) //EF - ice_spikes 666666
