@@ -1,5 +1,16 @@
 //path to your world.js script file
 var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
+//Be sure you have all images, lavers, etc. from the GitHub project.
+//When you set the path to "C:/WorldPainter/Script/", be sure all files are inside this folder on your PC!
+
+//For example, the script is located at "C:\WorldPainter\Script\world.js"
+//The images are at "C:\WorldPainter\Script\images\"
+//The layers are at "C:\WorldPainter\Script\layer\"
+//And so on...
+
+//To run the script, open WorldPainter, select "Tools" at the toolbar and "Run Script...".
+//Then press the 3 dots "..." and navigate to the script, e.g. "C:\WorldPainter\Script\world.js".
+//Then press "Run". (This can take a very long time, depending on the scale and your hardware)
 
 //version: "1-12", "1-13" or "1-14"
 var version = "1-12";
