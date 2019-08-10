@@ -16,6 +16,8 @@ Time / RAM needed to execute the script for 1.12:
 
 
 ## Sources
+Detailed process with images: http://earth.motfe.net/
+
 Heightmap: https://visibleearth.nasa.gov/view.php?id=73934
 
 Bathymetry: https://visibleearth.nasa.gov/view.php?id=73963
