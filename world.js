@@ -13,13 +13,13 @@ var path = "C:/WorldPainter/Script/"; //Use "/" instead of "\"
 //Then press "Run". (This can take a very long time, depending on the scale and your hardware)
 
 //version: "1-12", "1-13" or "1-14"
-var version = "1-12";
+var version = "1-13";
 
 //Scales:
 //"10" = Scale 1:4000 - uses 10752x5376 pixel images
 //"20" = Scale 1:2000 - uses 20504x10752 pixel images
 //"40" = scale 1:1000 - uses 43008x20504 pixel images
-var scale = 10;
+var scale = 20;
 
 //scale / resize of the images in percent, standard / no change = 100
 var resize = 100;
