@@ -34,6 +34,8 @@ Major Mineral Deposits: https://mrdata.usgs.gov/major-deposits/
 
 Streets: https://download.geofabrik.de/
 
+©️ OpenStreetMap Contributors https://www.openstreetmap.org/copyright
+
 
 ## Images
 The base of the script are the various images linked above. To determine the right resolution, I referred to Minecraft's region files, which have a size of 512x512 blocks. The final map should be a multiple of 512. The next step in my process was to edit the existing images. For example, the "Köppen Climate Classification" image had an original resolution of 43200x21600 pixels. The nearest fit for the map is 43008x21504, so I changed the canvas size (I didn't want to resize the image, otherwise information would be lost. Anti-aliasing is also forbidden since the script assigns a biome to a specific RGB color.)
